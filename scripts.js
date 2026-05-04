@@ -4,6 +4,7 @@ function initFadingVideo(video) {
   let rafId = null;
   let loaded = false;
   let visible = false;
+  let loadTriggered = false;
 
   video.style.opacity = '0';
   video.preload = 'none';
@@ -28,9 +29,9 @@ function initFadingVideo(video) {
 
   function onReady() {
     loaded = true;
+    fadeTo(1, FADE_MS);
     if (visible) {
       video.play();
-      fadeTo(1, FADE_MS);
     }
   }
 
@@ -40,8 +41,11 @@ function initFadingVideo(video) {
     visible = v;
     if (v) {
       if (!loaded) {
-        video.preload = 'auto';
-        video.load();
+        if (!loadTriggered) {
+          loadTriggered = true;
+          video.preload = 'auto';
+          video.load();
+        }
         if (video.readyState >= 2) {
           onReady();
         }
