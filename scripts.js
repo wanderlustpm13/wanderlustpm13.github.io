@@ -274,22 +274,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Logo swap: image on intro, text on projects
+  // Logo swap: image on intro & outro, text on projects
   const header = document.querySelector('.header');
   const introEl = document.querySelector('.intro');
+  const projectsSection = document.querySelector('.projects');
+  const outroSection = document.querySelector('.outro');
 
   function updateLogo() {
-    const pastIntro = window.scrollY >= introEl.offsetHeight - 10;
-    header.classList.toggle('header--scrolled', pastIntro);
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    const pastIntro = scrollY >= introEl.offsetHeight - 10;
+    const atOutro = outroSection && scrollY >= outroSection.offsetTop - vh / 2;
+    header.classList.toggle('header--scrolled', pastIntro && !atOutro);
   }
 
   window.addEventListener('scroll', updateLogo);
   updateLogo();
 
-  // Paging scroll from intro to projects
+  // Paging scroll: intro ↔ projects ↔ outro
   const intro = introEl;
-  const projectsSection = document.querySelector('.projects');
   let scrolling = false;
+
+  function snapTo(target) {
+    scrolling = true;
+    if (typeof target === 'number') {
+      window.scrollTo({ top: target, behavior: 'smooth' });
+    } else {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+    setTimeout(() => { scrolling = false; }, 800);
+  }
 
   window.addEventListener('wheel', (e) => {
     if (scrolling) {
@@ -299,17 +313,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const scrollTop = window.scrollY;
     const introBottom = intro.offsetHeight;
+    const projectsBottom = projectsSection.offsetTop + projectsSection.offsetHeight;
+    const vh = window.innerHeight;
 
-    if (scrollTop < introBottom && e.deltaY > 0) {
+    // Inside intro
+    if (scrollTop < introBottom - 10) {
+      if (e.deltaY > 0) {
+        e.preventDefault();
+        snapTo(projectsSection);
+      }
+      return;
+    }
+
+    // At very top of projects, scrolling up returns to intro
+    if (scrollTop <= introBottom + 10 && e.deltaY < 0) {
       e.preventDefault();
-      scrolling = true;
-      projectsSection.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => { scrolling = false; }, 800);
-    } else if (scrollTop <= introBottom && scrollTop > 0 && e.deltaY < 0) {
+      snapTo(0);
+      return;
+    }
+
+    // Past the bottom of projects: scroll down snaps to outro (with overscroll buffer)
+    if (outroSection && (scrollTop + vh) - projectsBottom >= 200 && scrollTop < outroSection.offsetTop - 20 && e.deltaY > 0) {
       e.preventDefault();
-      scrolling = true;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setTimeout(() => { scrolling = false; }, 800);
+      snapTo(outroSection);
+      return;
+    }
+
+    // At top of outro, scrolling up returns to end of projects
+    if (outroSection && Math.abs(scrollTop - outroSection.offsetTop) < 10 && e.deltaY < 0) {
+      e.preventDefault();
+      snapTo(outroSection.offsetTop - vh);
+      return;
     }
   }, { passive: false });
 

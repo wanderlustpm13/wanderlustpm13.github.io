@@ -33,12 +33,73 @@ body {
 }
 
 
-/* ---- Intro ---- */
+/* ---- Intro / Outro ---- */
 
 .intro {
   height: 100vh;
   position: relative;
   overflow: hidden;
+}
+
+.outro {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 88px var(--content-padding) 0;
+}
+
+.outro .hero {
+  position: static;
+  transform: none;
+  top: auto;
+  left: auto;
+  padding: 24px 0;
+  width: 100%;
+  max-width: var(--content-max);
+  margin: auto;
+}
+
+.outro .hero-title {
+  opacity: 1;
+}
+
+.outro .hero-title,
+.outro-body {
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 5.5vw, 48px);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+  font-style: normal;
+  max-width: none;
+}
+
+.outro-body {
+  margin-top: 0.8em;
+}
+
+.glyph-flower {
+  display: inline-block;
+  animation: spin 10s linear infinite;
+}
+
+.glyph-heart {
+  display: inline-block;
+  font-size: 0.85em;
+  animation: heartbeat 2.4s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { scale: 1; }
+  20% { scale: 1.08; }
+  40% { scale: 1; }
+  60% { scale: 1.05; }
+}
+
+.emoticon {
+  font-family: var(--font-sans);
+  white-space: nowrap;
 }
 
 /* ---- Header ---- */
@@ -85,7 +146,7 @@ body {
   top: 0;
   left: 0;
   font-family: var(--font-sans);
-  font-size: 20px;
+  font-size: 24px;
   color: var(--color-white);
   letter-spacing: -0.03em;
   white-space: nowrap;
@@ -350,6 +411,30 @@ body {
   color: var(--color-black);
 }
 
+/* ---- Footer ---- */
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 32px 0;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  letter-spacing: -0.002em;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.footer-left {
+  text-align: left;
+}
+
+.footer-right {
+  text-align: right;
+}
+
 /* ---- Sparkle Trail ---- */
 
 .sparkle {
@@ -374,13 +459,22 @@ body {
   }
 
   .projects {
-    gap: 80px;
-    padding-top: 80px;
+    gap: 100px;
+    padding-top: 120px;
     padding-bottom: 80px;
   }
 
   .project-name {
     font-size: 28px;
+  }
+
+  .project-info {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .project-info .project-description:nth-of-type(2) {
+    grid-column: 1;
   }
 }
 
@@ -400,8 +494,8 @@ body {
   }
 
   .projects {
-    gap: 64px;
-    padding-top: 60px;
+    gap: 96px;
+    padding-top: 120px;
     padding-bottom: 60px;
   }
 
@@ -411,7 +505,7 @@ body {
   }
 
   .project-name {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   .project-description {
@@ -420,7 +514,7 @@ body {
   }
 
   .project-time {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 
