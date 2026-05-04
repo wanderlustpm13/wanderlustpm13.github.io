@@ -10,7 +10,7 @@
   --color-black: #000;
   --color-white: #fff;
   --color-muted: rgba(0, 0, 0, 0.6);
-  --color-placeholder: #f85151;
+  --color-placeholder: #fff;
 
   --font-serif: 'Instrument Serif', Georgia, serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;

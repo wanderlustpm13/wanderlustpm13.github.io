@@ -2,6 +2,8 @@ const FADE_MS = 500;
 
 function initFadingVideo(video) {
   let rafId = null;
+  let loaded = false;
+  let visible = false;
 
   video.style.opacity = '0';
   video.preload = 'none';
@@ -25,17 +27,29 @@ function initFadingVideo(video) {
   }
 
   function onReady() {
-    video.play();
-    fadeTo(1, FADE_MS);
+    loaded = true;
+    if (visible) {
+      video.play();
+      fadeTo(1, FADE_MS);
+    }
   }
 
   video.addEventListener('loadeddata', onReady, { once: true });
 
-  return function trigger() {
-    video.preload = 'auto';
-    video.load();
-    if (video.readyState >= 2) {
-      onReady();
+  return function setVisible(v) {
+    visible = v;
+    if (v) {
+      if (!loaded) {
+        video.preload = 'auto';
+        video.load();
+        if (video.readyState >= 2) {
+          onReady();
+        }
+      } else {
+        video.play();
+      }
+    } else if (loaded) {
+      video.pause();
     }
   };
 }
@@ -228,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const img = project.querySelector('img.project-screenshot');
 
     if (media) {
-      project._mediaTrigger = initFadingVideo(media);
+      media._setVisible = initFadingVideo(media);
     } else if (img) {
       project._mediaTrigger = initFadingImage(img);
     }
@@ -255,6 +269,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   projects.forEach((project) => observer.observe(project));
+
+  const videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const video = entry.target;
+      if (video._setVisible) {
+        video._setVisible(entry.intersectionRatio >= 0.5);
+      }
+    });
+  }, {
+    threshold: [0, 0.5, 1]
+  });
+
+  document.querySelectorAll('video.project-screenshot').forEach((video) => {
+    videoObserver.observe(video);
+  });
 
   // Scroll arrow click
   const scrollArrowLink = document.querySelector('.scroll-arrow-link');
