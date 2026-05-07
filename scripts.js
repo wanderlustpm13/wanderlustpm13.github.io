@@ -208,6 +208,76 @@ function initHoverFollow() {
   });
 }
 
+function initParallax() {
+  if (!window.gsap || !window.ScrollTrigger) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const parallaxEnd = () => '+=' + window.innerHeight * 3;
+
+  gsap.to('.parallax-column--left', {
+    yPercent: -15,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.intro',
+      start: 'top top',
+      end: parallaxEnd,
+      scrub: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+
+  gsap.to('.parallax-column--right', {
+    yPercent: -22,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.intro',
+      start: 'top top',
+      end: parallaxEnd,
+      scrub: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+  window.addEventListener('resize', () => ScrollTrigger.refresh());
+}
+
+function initLightbox() {
+  const cards = document.querySelectorAll('.parallax-card');
+  if (!cards.length) return;
+
+  const lightbox = document.createElement('div');
+  lightbox.className = 'lightbox';
+  const lightboxImg = document.createElement('img');
+  lightboxImg.className = 'lightbox-img';
+  lightbox.appendChild(lightboxImg);
+  document.body.appendChild(lightbox);
+
+  function open(src, alt) {
+    lightboxImg.src = src;
+    lightboxImg.alt = alt || '';
+    lightbox.classList.add('is-open');
+  }
+
+  function close() {
+    lightbox.classList.remove('is-open');
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const img = card.querySelector('img');
+      if (!img) return;
+      open(img.src, img.alt);
+    });
+  });
+
+  lightbox.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+}
+
 function initSparkleTrail() {
   const intro = document.querySelector('.intro');
   if (!intro) return;
@@ -234,6 +304,8 @@ document.addEventListener('DOMContentLoaded', () => {
   animateHeroWords();
   initHoverFollow();
   initSparkleTrail();
+  initParallax();
+  initLightbox();
 
   const projects = document.querySelectorAll('.project');
 
@@ -336,25 +408,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const scrollTop = window.scrollY;
-    const introBottom = intro.offsetHeight;
     const projectsBottom = projectsSection.offsetTop + projectsSection.offsetHeight;
     const vh = window.innerHeight;
-
-    // Inside intro
-    if (scrollTop < introBottom - 10) {
-      if (e.deltaY > 0) {
-        e.preventDefault();
-        snapTo(projectsSection);
-      }
-      return;
-    }
-
-    // At very top of projects, scrolling up returns to intro
-    if (scrollTop <= introBottom + 10 && e.deltaY < 0) {
-      e.preventDefault();
-      snapTo(0);
-      return;
-    }
 
     // Past the bottom of projects: scroll down snaps to outro (with overscroll buffer)
     if (outroSection && (scrollTop + vh) - projectsBottom >= 200 && scrollTop < outroSection.offsetTop - 20 && e.deltaY > 0) {

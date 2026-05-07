@@ -36,9 +36,132 @@ body {
 /* ---- Intro / Outro ---- */
 
 .intro {
-  height: 100vh;
+  min-height: 400vh;
   position: relative;
-  overflow: hidden;
+}
+
+.intro-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 30;
+}
+
+.parallax-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+  z-index: 1;
+  pointer-events: none;
+}
+
+main {
+  position: relative;
+  z-index: 2;
+}
+
+.parallax-column {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 60vh;
+  padding-top: 110vh;
+  will-change: transform;
+}
+
+.parallax-column--left {
+  align-items: flex-start;
+}
+
+.parallax-column--right {
+  align-items: flex-end;
+  padding-top: 200vh;
+}
+
+.parallax-card {
+  width: 100%;
+  max-width: 320px;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: scale 0.3s ease, rotate 0.3s ease;
+}
+
+.parallax-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.parallax-column--left .parallax-card:nth-child(1) { rotate: -4deg; }
+.parallax-column--left .parallax-card:nth-child(2) { rotate: 3deg; }
+.parallax-column--left .parallax-card:nth-child(3) { rotate: -2deg; }
+.parallax-column--left .parallax-card:nth-child(4) { rotate: 5deg; }
+.parallax-column--right .parallax-card:nth-child(1) { rotate: 4deg; }
+.parallax-column--right .parallax-card:nth-child(2) { rotate: -3deg; }
+.parallax-column--right .parallax-card:nth-child(3) { rotate: 2deg; }
+
+.parallax-card:hover {
+  scale: 1.04;
+  rotate: 0deg;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: zoom-out;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.lightbox.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  scale: 0.94;
+  transition: scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.lightbox.is-open .lightbox-img {
+  scale: 1;
+}
+
+@media (max-width: 768px) {
+  .parallax-grid {
+    gap: 16px;
+  }
+
+  .parallax-card {
+    max-width: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .parallax-card {
+    max-width: 130px;
+  }
 }
 
 .outro {
