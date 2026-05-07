@@ -36,7 +36,7 @@ body {
 /* ---- Intro / Outro ---- */
 
 .intro {
-  min-height: 400vh;
+  min-height: 450vh;
   position: relative;
 }
 
@@ -45,6 +45,11 @@ body {
   top: 0;
   height: 100vh;
   z-index: 30;
+  mix-blend-mode: difference;
+}
+
+.intro .hero-title {
+  color: var(--color-white);
 }
 
 .parallax-grid {
@@ -87,8 +92,9 @@ main {
 }
 
 .parallax-card {
+  --card-base: 320px;
   width: 100%;
-  max-width: 320px;
+  max-width: var(--card-base);
   pointer-events: auto;
   cursor: pointer;
   transition: scale 0.3s ease, rotate 0.3s ease;
@@ -106,7 +112,10 @@ main {
 .parallax-column--left .parallax-card:nth-child(2) { rotate: 3deg; }
 .parallax-column--left .parallax-card:nth-child(3) { rotate: -2deg; }
 .parallax-column--left .parallax-card:nth-child(4) { rotate: 5deg; }
-.parallax-column--right .parallax-card:nth-child(1) { rotate: 4deg; }
+.parallax-column--right .parallax-card:nth-child(1) {
+  rotate: 4deg;
+  max-width: calc(var(--card-base) * 0.8);
+}
 .parallax-column--right .parallax-card:nth-child(2) { rotate: -3deg; }
 .parallax-column--right .parallax-card:nth-child(3) { rotate: 2deg; }
 
@@ -154,13 +163,13 @@ main {
   }
 
   .parallax-card {
-    max-width: 160px;
+    --card-base: 160px;
   }
 }
 
 @media (max-width: 480px) {
   .parallax-card {
-    max-width: 130px;
+    --card-base: 130px;
   }
 }
 

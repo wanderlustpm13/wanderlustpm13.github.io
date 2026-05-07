@@ -213,7 +213,7 @@ function initParallax() {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const parallaxEnd = () => '+=' + window.innerHeight * 3;
+  const parallaxEnd = () => '+=' + window.innerHeight * 3.5;
 
   gsap.to('.parallax-column--left', {
     yPercent: -15,
@@ -386,45 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', updateLogo);
   updateLogo();
-
-  // Paging scroll: intro ↔ projects ↔ outro
-  const intro = introEl;
-  let scrolling = false;
-
-  function snapTo(target) {
-    scrolling = true;
-    if (typeof target === 'number') {
-      window.scrollTo({ top: target, behavior: 'smooth' });
-    } else {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
-    setTimeout(() => { scrolling = false; }, 800);
-  }
-
-  window.addEventListener('wheel', (e) => {
-    if (scrolling) {
-      e.preventDefault();
-      return;
-    }
-
-    const scrollTop = window.scrollY;
-    const projectsBottom = projectsSection.offsetTop + projectsSection.offsetHeight;
-    const vh = window.innerHeight;
-
-    // Past the bottom of projects: scroll down snaps to outro (with overscroll buffer)
-    if (outroSection && (scrollTop + vh) - projectsBottom >= 200 && scrollTop < outroSection.offsetTop - 20 && e.deltaY > 0) {
-      e.preventDefault();
-      snapTo(outroSection);
-      return;
-    }
-
-    // At top of outro, scrolling up returns to end of projects
-    if (outroSection && Math.abs(scrollTop - outroSection.offsetTop) < 10 && e.deltaY < 0) {
-      e.preventDefault();
-      snapTo(outroSection.offsetTop - vh);
-      return;
-    }
-  }, { passive: false });
 
   // Tilt effect on project screenshots
   const MAX_TILT = 1.5;
