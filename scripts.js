@@ -289,15 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
     videoObserver.observe(video);
   });
 
-  // Scroll arrow click
-  const scrollArrowLink = document.querySelector('.scroll-arrow-link');
-  if (scrollArrowLink) {
-    scrollArrowLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.querySelector('.projects').scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
   // Logo text click → scroll to top
   const logoTextLink = document.querySelector('.logo-text');
   if (logoTextLink) {

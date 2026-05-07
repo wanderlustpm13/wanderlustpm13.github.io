@@ -281,33 +281,6 @@ body {
   font-size: clamp(16px, 2.4vw, 21px);
 }
 
-/* ---- Scroll Arrow ---- */
-
-.scroll-arrow-link {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  animation: bounce 2s ease-in-out 2s infinite, arrowIn 0.5s ease 1.5s forwards;
-  line-height: 0;
-}
-
-@keyframes arrowIn {
-  to { opacity: 1; }
-}
-
-.scroll-arrow {
-  width: 36px;
-  height: auto;
-  filter: brightness(0);
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(6px); }
-}
-
 /* ---- Hover Reveal ---- */
 
 .hover-reveal {
