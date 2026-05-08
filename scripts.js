@@ -216,7 +216,7 @@ function initParallax() {
   const parallaxEnd = () => '+=' + window.innerHeight * 3.5;
 
   gsap.to('.parallax-column--left', {
-    yPercent: -15,
+    yPercent: -22,
     ease: 'none',
     scrollTrigger: {
       trigger: '.intro',
@@ -228,7 +228,7 @@ function initParallax() {
   });
 
   gsap.to('.parallax-column--right', {
-    yPercent: -22,
+    yPercent: -28,
     ease: 'none',
     scrollTrigger: {
       trigger: '.intro',
