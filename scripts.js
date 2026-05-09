@@ -278,6 +278,81 @@ function initLightbox() {
   });
 }
 
+function initCursorDots() {
+  const canvas = document.querySelector('.halftone-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const root = document.body;
+
+  const SPACING = 16;
+  const DOT = 1.8;
+  const FALLOFF = 300;
+  const MAX_PUSH = 6;
+  const COLOR = 'rgba(184, 74, 58, 0.4)';
+
+  let targetXNorm = 0.5, targetYNorm = 0.5;
+  let currentXNorm = 0.5, currentYNorm = 0.5;
+  let mx = -9999, my = -9999;
+  let tx = -9999, ty = -9999;
+  let w = 0, h = 0;
+  let dpr = 1;
+
+  function resize() {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    dpr = window.devicePixelRatio || 1;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  window.addEventListener('mousemove', (e) => {
+    tx = e.clientX;
+    ty = e.clientY;
+    targetXNorm = e.clientX / window.innerWidth;
+    targetYNorm = e.clientY / window.innerHeight;
+  }, { passive: true });
+
+  function tick() {
+    mx += (tx - mx) * 0.12;
+    my += (ty - my) * 0.12;
+    currentXNorm += (targetXNorm - currentXNorm) * 0.06;
+    currentYNorm += (targetYNorm - currentYNorm) * 0.06;
+    root.style.setProperty('--mx', currentXNorm.toFixed(4));
+    root.style.setProperty('--my', currentYNorm.toFixed(4));
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = COLOR;
+
+    const ff2 = FALLOFF * FALLOFF;
+    for (let y = SPACING / 2; y < h; y += SPACING) {
+      for (let x = SPACING / 2; x < w; x += SPACING) {
+        const dx = x - mx;
+        const dy = y - my;
+        const d2 = dx * dx + dy * dy;
+        let ox = 0, oy = 0, s = DOT;
+        if (d2 < ff2) {
+          const d = Math.sqrt(d2);
+          const t = 1 - d / FALLOFF;
+          const push = MAX_PUSH * t * t;
+          if (d > 0.5) {
+            ox = (dx / d) * push;
+            oy = (dy / d) * push;
+          }
+          s = DOT * (1 + t * 0.6);
+        }
+        ctx.fillRect(x + ox - s / 2, y + oy - s / 2, s, s);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
 function initSparkleTrail() {
   const intro = document.querySelector('.intro');
   if (!intro) return;
@@ -306,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSparkleTrail();
   initParallax();
   initLightbox();
+  initCursorDots();
 
   const projects = document.querySelectorAll('.project');
 

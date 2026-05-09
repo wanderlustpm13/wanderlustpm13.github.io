@@ -53,96 +53,30 @@ body::after {
   position: relative;
 }
 
-/* ---- Page Gradient Mesh ---- */
+/* ---- Halftone Dot Field ---- */
 
-.page-bg {
+.halftone-canvas {
   position: fixed;
   inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.blob {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.35;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   mix-blend-mode: multiply;
   z-index: 0;
-  will-change: transform;
 }
 
-.blob--1 {
-  width: 55vw;
-  height: 55vw;
-  background: #FFB088;
-  top: -15%;
-  left: -10%;
-  animation: blobDrift1 14s ease-in-out infinite;
-}
-
-.blob--2 {
-  width: 50vw;
-  height: 50vw;
-  background: #F5B5C2;
-  top: 20%;
-  right: -15%;
-  animation: blobDrift2 18s ease-in-out infinite;
-}
-
-.blob--3 {
-  width: 60vw;
-  height: 60vw;
-  background: #FFD89A;
-  bottom: -25%;
-  left: 15%;
-  animation: blobDrift3 16s ease-in-out infinite;
-}
-
-.blob--4 {
-  width: 38vw;
-  height: 38vw;
-  background: #F5A0A0;
-  top: 30%;
-  left: 35%;
-  animation: blobDrift4 12s ease-in-out infinite;
-}
-
-@keyframes blobDrift1 {
-  0%   { transform: translate(0, 0) scale(1); }
-  25%  { transform: translate(22vw, -8vh) scale(1.2); }
-  50%  { transform: translate(15vw, 28vh) scale(0.95); }
-  75%  { transform: translate(-12vw, 18vh) scale(1.1); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-@keyframes blobDrift2 {
-  0%   { transform: translate(0, 0) scale(1); }
-  25%  { transform: translate(-20vw, 10vh) scale(0.85); }
-  50%  { transform: translate(-25vw, -15vh) scale(1.15); }
-  75%  { transform: translate(8vw, -22vh) scale(1.05); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-@keyframes blobDrift3 {
-  0%   { transform: translate(0, 0) scale(1); }
-  25%  { transform: translate(15vw, -25vh) scale(1.15); }
-  50%  { transform: translate(-10vw, -12vh) scale(0.9); }
-  75%  { transform: translate(-18vw, 8vh) scale(1.2); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-@keyframes blobDrift4 {
-  0%   { transform: translate(0, 0) scale(1); }
-  25%  { transform: translate(-18vw, 22vh) scale(1.25); }
-  50%  { transform: translate(20vw, 15vh) scale(0.9); }
-  75%  { transform: translate(15vw, -20vh) scale(1.1); }
-  100% { transform: translate(0, 0) scale(1); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .blob { animation: none; }
+.dot-glow {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle 280px at calc(var(--mx, 0.5) * 100%) calc(var(--my, 0.5) * 100%),
+    rgba(184, 74, 58, 0.18) 0%,
+    rgba(184, 74, 58, 0) 70%
+  );
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  z-index: 0;
+  will-change: background;
 }
 
 .intro-pin {
