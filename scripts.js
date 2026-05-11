@@ -289,6 +289,7 @@ function initCursorDots() {
   const FALLOFF = 300;
   const MAX_PUSH = 6;
   const COLOR = 'rgba(184, 74, 58, 0.4)';
+  const IDLE_DELAY = 1500;
 
   let targetXNorm = 0.5, targetYNorm = 0.5;
   let currentXNorm = 0.5, currentYNorm = 0.5;
@@ -296,6 +297,9 @@ function initCursorDots() {
   let tx = -9999, ty = -9999;
   let w = 0, h = 0;
   let dpr = 1;
+  let lastInteractionTime = 0;
+  let firstDrift = true;
+  const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   function resize() {
     w = window.innerWidth;
@@ -310,14 +314,59 @@ function initCursorDots() {
   resize();
   window.addEventListener('resize', resize);
 
+  function setCursor(cx, cy) {
+    tx = cx;
+    ty = cy;
+    targetXNorm = cx / window.innerWidth;
+    targetYNorm = cy / window.innerHeight;
+    lastInteractionTime = performance.now();
+  }
+
   window.addEventListener('mousemove', (e) => {
-    tx = e.clientX;
-    ty = e.clientY;
-    targetXNorm = e.clientX / window.innerWidth;
-    targetYNorm = e.clientY / window.innerHeight;
+    setCursor(e.clientX, e.clientY);
   }, { passive: true });
 
-  function tick() {
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 0) return;
+    setCursor(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 0) return;
+    setCursor(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+
+  window.addEventListener('scroll', () => {
+    lastInteractionTime = performance.now();
+  }, { passive: true });
+
+  function getDrift(t) {
+    const s = t / 1000;
+    const nx = 0.5 + 0.32 * Math.sin(s * 0.18) + 0.13 * Math.sin(s * 0.43 + 1.7);
+    const ny = 0.5 + 0.30 * Math.cos(s * 0.22) + 0.12 * Math.cos(s * 0.37 + 2.3);
+    return [nx * w, ny * h];
+  }
+
+  function tick(now) {
+    if (now == null) now = performance.now();
+
+    if (isTouchDevice && now - lastInteractionTime > IDLE_DELAY) {
+      const [dx, dy] = getDrift(now);
+      tx = dx;
+      ty = dy;
+      targetXNorm = dx / w;
+      targetYNorm = dy / h;
+      if (firstDrift) {
+        mx = dx;
+        my = dy;
+        currentXNorm = targetXNorm;
+        currentYNorm = targetYNorm;
+        firstDrift = false;
+      }
+    } else {
+      firstDrift = false;
+    }
+
     mx += (tx - mx) * 0.12;
     my += (ty - my) * 0.12;
     currentXNorm += (targetXNorm - currentXNorm) * 0.06;
