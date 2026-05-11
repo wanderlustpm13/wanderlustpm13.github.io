@@ -424,6 +424,85 @@ main {
   60% { rotate: 3deg; }
 }
 
+/* ---- Pencil "i" ---- */
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pencil-i {
+  position: relative;
+  display: inline-block;
+  width: 0.42em;
+  margin-right: 0.05em;
+  vertical-align: baseline;
+}
+
+.pencil-glyph {
+  position: absolute;
+  display: inline-block;
+  font-size: 0.75em;
+  rotate: -85deg;
+  translate: 0 0;
+  transform-origin: center;
+  left: 50%;
+  bottom: -0.2em;
+  margin-left: -0.39em;
+  animation: penDraw 5s ease-in-out 1.1s infinite;
+}
+
+.pencil-circle {
+  position: absolute;
+  width: 0.42em;
+  height: 0.42em;
+  bottom: 0.45em;
+  left: 50%;
+  margin-left: -0.15em;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.pencil-circle path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawPencilCircle 5s ease-in-out 1.1s infinite;
+}
+
+@keyframes drawPencilCircle {
+  0%   { stroke-dashoffset: 100; opacity: 1; }
+  20%  { stroke-dashoffset: 0; opacity: 1; }
+  70%  { stroke-dashoffset: 0; opacity: 1; }
+  78%  { stroke-dashoffset: 0; opacity: 0; }
+  79%  { stroke-dashoffset: 100; opacity: 0; }
+  100% { stroke-dashoffset: 100; opacity: 0; }
+}
+
+@keyframes penDraw {
+  0%    { translate: 0 0;                rotate: -85deg; }
+  2.5%  { translate: -0.035em -0.015em;  rotate: -85deg; }
+  5%    { translate: -0.05em -0.05em;    rotate: -84deg; }
+  7.5%  { translate: -0.035em -0.085em;  rotate: -84deg; }
+  10%   { translate: 0 -0.1em;           rotate: -85deg; }
+  12.5% { translate: 0.035em -0.085em;   rotate: -86deg; }
+  15%   { translate: 0.05em -0.05em;     rotate: -86deg; }
+  17.5% { translate: 0.035em -0.015em;   rotate: -85deg; }
+  20%   { translate: 0 0;                rotate: -85deg; }
+  100%  { translate: 0 0;                rotate: -85deg; }
+}
+
 .glyph-pointer {
   display: inline-block;
   animation: point 1.8s ease-in-out infinite;
