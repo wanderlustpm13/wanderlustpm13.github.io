@@ -68,7 +68,7 @@ body::after {
   position: fixed;
   inset: 0;
   background: radial-gradient(
-    circle 280px at calc(var(--mx, 0.5) * 100%) calc(var(--my, 0.5) * 100%),
+    circle 400px at calc(var(--mx, 0.5) * 100%) calc(var(--my, 0.5) * 100%),
     rgba(184, 74, 58, 0.18) 0%,
     rgba(184, 74, 58, 0) 70%
   );
@@ -341,7 +341,7 @@ main {
 
 .nav-links {
   display: flex;
-  gap: 32px;
+  gap: 48px;
 }
 
 .nav-link {
