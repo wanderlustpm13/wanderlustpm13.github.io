@@ -402,6 +402,63 @@ function initCursorDots() {
   tick();
 }
 
+function initEmoticonEyes() {
+  const outro = document.querySelector('.outro');
+  const eyes = Array.from(document.querySelectorAll('.emoticon .eye'));
+  if (!outro || !eyes.length) return;
+
+  let mouseX = 0, mouseY = 0;
+  let mouseInit = false;
+  let inView = false;
+  let rafId = null;
+
+  const state = eyes.map(el => ({ el, current: 0 }));
+
+  function tick() {
+    if (!inView) {
+      rafId = null;
+      return;
+    }
+    if (mouseInit) {
+      state.forEach(s => {
+        const rect = s.el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = mouseX - cx;
+        const dy = mouseY - cy;
+        // ◕ glyph has its filled "iris" in the upper-left quadrant (~10:30).
+        // CSS rotate is clockwise from 12 o'clock, so the rotation needed
+        // to point the iris at the cursor is atan2 + 90° (cursor angle in
+        // CSS frame) + 45° (offset of iris from 12 o'clock).
+        const target = Math.atan2(dy, dx) * 180 / Math.PI + 135;
+        let diff = target - s.current;
+        while (diff > 180) diff -= 360;
+        while (diff < -180) diff += 360;
+        s.current += diff * 0.18;
+        s.el.style.rotate = s.current.toFixed(2) + 'deg';
+      });
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    mouseInit = true;
+  }, { passive: true });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      inView = entry.isIntersecting;
+      if (inView && !rafId) {
+        rafId = requestAnimationFrame(tick);
+      }
+    });
+  }, { threshold: 0 });
+
+  observer.observe(outro);
+}
+
 function initSparkleTrail() {
   const intro = document.querySelector('.intro');
   if (!intro) return;
@@ -431,6 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initParallax();
   initLightbox();
   initCursorDots();
+  initEmoticonEyes();
 
   const projects = document.querySelectorAll('.project');
 

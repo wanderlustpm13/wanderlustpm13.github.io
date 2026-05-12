@@ -275,6 +275,11 @@ main {
   white-space: nowrap;
 }
 
+.emoticon .eye {
+  display: inline-block;
+  will-change: rotate;
+}
+
 /* ---- Header ---- */
 
 .header {
