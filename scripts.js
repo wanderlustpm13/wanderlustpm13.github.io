@@ -243,41 +243,6 @@ function initParallax() {
   window.addEventListener('resize', () => ScrollTrigger.refresh());
 }
 
-function initLightbox() {
-  const cards = document.querySelectorAll('.parallax-card');
-  if (!cards.length) return;
-
-  const lightbox = document.createElement('div');
-  lightbox.className = 'lightbox';
-  const lightboxImg = document.createElement('img');
-  lightboxImg.className = 'lightbox-img';
-  lightbox.appendChild(lightboxImg);
-  document.body.appendChild(lightbox);
-
-  function open(src, alt) {
-    lightboxImg.src = src;
-    lightboxImg.alt = alt || '';
-    lightbox.classList.add('is-open');
-  }
-
-  function close() {
-    lightbox.classList.remove('is-open');
-  }
-
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      const img = card.querySelector('img');
-      if (!img) return;
-      open(img.src, img.alt);
-    });
-  });
-
-  lightbox.addEventListener('click', close);
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') close();
-  });
-}
-
 function initCursorDots() {
   const canvas = document.querySelector('.halftone-canvas');
   if (!canvas) return;
@@ -486,7 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initHoverFollow();
   initSparkleTrail();
   initParallax();
-  initLightbox();
   initCursorDots();
   initEmoticonEyes();
 
