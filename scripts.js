@@ -517,6 +517,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // About Me link → smooth-scroll to outro.
+  // Project images lazy-load (initFadingImage clears img.src until in view),
+  // so before they load each project container has ~0 height. A native
+  // smooth scroll computes the outro's target position once and locks in,
+  // landing in the wrong spot once images load and push layout down.
+  // Fix: (1) preempt all project loads so the page expands now, and
+  // (2) use a custom rAF scroll that re-targets each frame.
+  const aboutLink = document.querySelector('.nav-about');
+  const outroEl = document.querySelector('#outro');
+  if (aboutLink && outroEl) {
+    aboutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      document.querySelectorAll('.project').forEach((project) => {
+        if (project._mediaTrigger) {
+          project._mediaTrigger();
+          delete project._mediaTrigger;
+        }
+        project.style.opacity = '1';
+        project.style.transform = 'translateY(0)';
+      });
+
+      const startY = window.scrollY;
+      const startTime = performance.now();
+      const duration = 900;
+
+      function tick(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = progress < 0.5
+          ? 2 * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+        const target = outroEl.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(0, startY + (target - startY) * eased);
+
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+
+      requestAnimationFrame(tick);
+    });
+  }
+
   // Logo swap: image on intro & outro, text on projects
   const header = document.querySelector('.header');
   const introEl = document.querySelector('.intro');
