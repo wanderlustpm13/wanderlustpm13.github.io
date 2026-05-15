@@ -239,6 +239,64 @@ function initParallax() {
     },
   });
 
+  // Short viewports only: hero is no longer sticky-pinned (see CSS),
+  // so it scrolls naturally with the page. Translate it down so its
+  // bottom edge reaches the viewport top exactly when the last
+  // parallax card finishes exiting — keeping intro text behind the
+  // images the entire time, then both exit together.
+  //
+  // Card exit timing depends on each column's actual height (which
+  // scales with viewport height + card pixel sizes), so we compute it
+  // dynamically. We also size .intro to match — its bottom = last
+  // card exit + 1 viewport — so Projects enters the viewport exactly
+  // as the cards/hero leave it (no overlap, no dead scroll).
+  const computeLastCardExit = () => {
+    let maxExit = 0;
+    document.querySelectorAll('.parallax-column').forEach((col) => {
+      const isLeft = col.classList.contains('parallax-column--left');
+      const ratio = isLeft ? 0.22 : 0.28;
+      maxExit = Math.max(maxExit, col.offsetHeight * (1 - ratio));
+    });
+    return maxExit;
+  };
+
+  const mm = gsap.matchMedia();
+  mm.add('(max-height: 760px)', () => {
+    const intro = document.querySelector('.intro');
+
+    const updateIntroHeight = () => {
+      if (intro) {
+        intro.style.minHeight = (computeLastCardExit() + window.innerHeight) + 'px';
+      }
+    };
+
+    updateIntroHeight();
+    window.addEventListener('resize', updateIntroHeight);
+
+    gsap.to('.intro-pin', {
+      y: () => {
+        const heroEl = document.querySelector('.intro .hero');
+        if (!heroEl) return 0;
+        const heroHeight = heroEl.getBoundingClientRect().height;
+        const padTop = 140; // matches .intro-pin padding-top in short mode
+        return Math.max(0, computeLastCardExit() - padTop - heroHeight);
+      },
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.intro',
+        start: 'top top',
+        end: () => '+=' + computeLastCardExit(),
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    return () => {
+      window.removeEventListener('resize', updateIntroHeight);
+      if (intro) intro.style.minHeight = '';
+    };
+  });
+
   window.addEventListener('load', () => ScrollTrigger.refresh());
   window.addEventListener('resize', () => ScrollTrigger.refresh());
 }

@@ -88,6 +88,35 @@ body::after {
   isolation: isolate;
 }
 
+/* Short viewports: drop the sticky pin so the hero can overflow and
+   scroll naturally, with GSAP applying a slow parallax in scripts.js.
+   Anchor the hero from the top so it never crosses behind the nav.
+   .intro min-height is set dynamically by scripts.js so its bottom
+   exactly aligns with "last image fully exits viewport"; this 500vh
+   value is just a fallback if JS hasn't initialized yet. */
+@media (max-height: 760px) {
+  .intro {
+    min-height: 500vh;
+  }
+
+  .intro-pin {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 100vh;
+    padding: 140px var(--content-padding) 80px;
+  }
+
+  .intro .hero {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+
 .intro .hero-title {
   color: var(--color-white);
 }
@@ -839,5 +868,61 @@ main {
 
   .project-name {
     font-size: 28px;
+  }
+}
+
+/* ============================================================ */
+/* ALTERNATE: Multi-Column Projects Layout (currently active)   */
+/* ============================================================ */
+/* To revert to the original single-column layout, delete this  */
+/* entire section.                                              */
+/* ============================================================ */
+
+/* Base = 1 column (mobile) */
+.projects {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: none;
+  margin: 0;
+  gap: 56px;
+  padding: 160px 24px 100px;
+}
+
+.project-info {
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+  width: 92%;
+}
+
+.project-name {
+  font-size: 32px;
+  line-height: 1.25;
+}
+
+.project-description {
+  font-size: 16px;
+  padding-top: 0;
+}
+
+.project-time {
+  font-size: 15px;
+}
+
+/* ≥ 1080px: 2 columns */
+@media (min-width: 1080px) {
+  .projects {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 64px 48px;
+    padding: 200px 48px 120px;
+  }
+}
+
+/* ≥ 2400px: 3 columns with ample side padding */
+@media (min-width: 2400px) {
+  .projects {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 72px 56px;
+    padding: 220px 160px 140px;
   }
 }
