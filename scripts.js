@@ -316,13 +316,24 @@ function initCursorDots() {
 
   let targetXNorm = 0.5, targetYNorm = 0.5;
   let currentXNorm = 0.5, currentYNorm = 0.5;
-  let mx = -9999, my = -9999;
-  let tx = -9999, ty = -9999;
+  let mx = 0, my = 0;
+  let tx = 0, ty = 0;
   let w = 0, h = 0;
   let dpr = 1;
   let lastInteractionTime = 0;
-  let firstDrift = true;
-  const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  let cursorInViewport = false;
+  let firstFrame = true;
+
+  // Drift anchoring: when drift starts, capture an offset between the
+  // last cursor position and the drift function's value at that moment,
+  // so the drift begins exactly at the cursor's last position. The
+  // offset decays exponentially so the drift gradually settles back
+  // into its natural pattern across the viewport.
+  let driftWasActive = false;
+  let driftStartTime = 0;
+  let driftAnchorOffsetX = 0;
+  let driftAnchorOffsetY = 0;
+  const DRIFT_ANCHOR_DECAY_MS = 3000;
 
   function resize() {
     w = window.innerWidth;
@@ -346,16 +357,33 @@ function initCursorDots() {
   }
 
   window.addEventListener('mousemove', (e) => {
+    cursorInViewport = true;
     setCursor(e.clientX, e.clientY);
+  }, { passive: true });
+
+  document.addEventListener('mouseenter', () => {
+    cursorInViewport = true;
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => {
+    cursorInViewport = false;
+  }, { passive: true });
+
+  // Window blur (alt-tab / focus another app): treat as cursor-out so
+  // the glow starts drifting until interaction resumes.
+  window.addEventListener('blur', () => {
+    cursorInViewport = false;
   }, { passive: true });
 
   window.addEventListener('touchstart', (e) => {
     if (e.touches.length === 0) return;
+    cursorInViewport = true;
     setCursor(e.touches[0].clientX, e.touches[0].clientY);
   }, { passive: true });
 
   window.addEventListener('touchmove', (e) => {
     if (e.touches.length === 0) return;
+    cursorInViewport = true;
     setCursor(e.touches[0].clientX, e.touches[0].clientY);
   }, { passive: true });
 
@@ -373,27 +401,51 @@ function initCursorDots() {
   function tick(now) {
     if (now == null) now = performance.now();
 
-    if (isTouchDevice && now - lastInteractionTime > IDLE_DELAY) {
-      const [dx, dy] = getDrift(now);
-      tx = dx;
-      ty = dy;
-      targetXNorm = dx / w;
-      targetYNorm = dy / h;
-      if (firstDrift) {
-        mx = dx;
-        my = dy;
-        currentXNorm = targetXNorm;
-        currentYNorm = targetYNorm;
-        firstDrift = false;
+    // Drift when the cursor is outside the viewport, or inside but
+    // idle for longer than IDLE_DELAY. When drift first kicks in we
+    // anchor it to the cursor's last position (so the glow doesn't
+    // jump to wherever the drift function happens to be). The anchor
+    // offset then decays exponentially, letting the drift slowly
+    // wander back into its full-viewport pattern.
+    const isIdle = now - lastInteractionTime > IDLE_DELAY;
+    const shouldDrift = !cursorInViewport || isIdle;
+
+    if (shouldDrift) {
+      if (!driftWasActive) {
+        const [dx0, dy0] = getDrift(now);
+        // On the very first frame there's no prior cursor position,
+        // so don't apply an anchor offset — start at the natural
+        // drift point instead of (0, 0).
+        driftAnchorOffsetX = firstFrame ? 0 : tx - dx0;
+        driftAnchorOffsetY = firstFrame ? 0 : ty - dy0;
+        driftStartTime = now;
+        driftWasActive = true;
       }
+      const fade = Math.exp(-(now - driftStartTime) / DRIFT_ANCHOR_DECAY_MS);
+      const [dx, dy] = getDrift(now);
+      tx = dx + driftAnchorOffsetX * fade;
+      ty = dy + driftAnchorOffsetY * fade;
+      targetXNorm = tx / w;
+      targetYNorm = ty / h;
     } else {
-      firstDrift = false;
+      driftWasActive = false;
     }
 
-    mx += (tx - mx) * 0.12;
-    my += (ty - my) * 0.12;
-    currentXNorm += (targetXNorm - currentXNorm) * 0.06;
-    currentYNorm += (targetYNorm - currentYNorm) * 0.06;
+    if (firstFrame) {
+      // Snap to the first target on initial frame so the glow doesn't
+      // sweep in from (0, 0) when the page first loads.
+      mx = tx;
+      my = ty;
+      currentXNorm = targetXNorm;
+      currentYNorm = targetYNorm;
+      firstFrame = false;
+    } else {
+      mx += (tx - mx) * 0.12;
+      my += (ty - my) * 0.12;
+      currentXNorm += (targetXNorm - currentXNorm) * 0.06;
+      currentYNorm += (targetYNorm - currentYNorm) * 0.06;
+    }
+
     root.style.setProperty('--mx', currentXNorm.toFixed(4));
     root.style.setProperty('--my', currentYNorm.toFixed(4));
 

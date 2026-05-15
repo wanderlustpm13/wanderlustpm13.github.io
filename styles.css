@@ -70,7 +70,7 @@ body::after {
   inset: 0;
   background: radial-gradient(
     circle 400px at calc(var(--mx, 0.5) * 100%) calc(var(--my, 0.5) * 100%),
-    rgba(184, 74, 58, 0.18) 0%,
+    rgba(184, 74, 58, 0.22) 0%,
     rgba(184, 74, 58, 0) 70%
   );
   pointer-events: none;
