@@ -276,26 +276,24 @@ main {
   will-change: rotate;
 }
 
-/* ---- Polaroid Pinboard ---- */
+/* ---- Polaroid Moodboard ---- */
 
 .polaroid-board {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 72px 56px;
-  margin: 96px auto 96px;
-  padding: 24px 0;
+  position: relative;
   width: 100%;
   max-width: var(--content-max);
+  margin: 96px auto;
+  height: clamp(720px, 70vw, 940px);
 }
 
 .polaroid {
+  position: absolute;
   background: #fffefa;
   padding: 14px 14px 16px;
+  width: clamp(200px, 22vw, 280px);
   box-shadow:
     0 4px 14px rgba(0, 0, 0, 0.12),
     0 1px 3px rgba(0, 0, 0, 0.08);
-  position: relative;
-  width: 100%;
   display: flex;
   flex-direction: column;
   transition:
@@ -304,12 +302,13 @@ main {
     box-shadow 0.35s ease;
 }
 
-.polaroid:nth-child(6n+1) { rotate: -3deg; }
-.polaroid:nth-child(6n+2) { rotate: 4deg; }
-.polaroid:nth-child(6n+3) { rotate: -2deg; }
-.polaroid:nth-child(6n+4) { rotate: 3deg; }
-.polaroid:nth-child(6n+5) { rotate: -4deg; }
-.polaroid:nth-child(6n)   { rotate: 2deg; }
+/* Scattered positions — eyeballed for a casual moodboard feel. */
+.polaroid-1 { top: 4%;  left: 4%;  rotate: -6deg; z-index: 1; }
+.polaroid-2 { top: 12%; left: 36%; rotate: 4deg;  z-index: 2; }
+.polaroid-3 { top: 1%;  left: 68%; rotate: -3deg; z-index: 1; }
+.polaroid-4 { top: 49%; left: 6%;  rotate: 7deg;  z-index: 2; }
+.polaroid-5 { top: 51%; left: 36%; rotate: -7deg; z-index: 3; }
+.polaroid-6 { top: 46%; left: 66%; rotate: 3deg;  z-index: 1; }
 
 .polaroid:hover {
   rotate: 0deg;
@@ -341,24 +340,67 @@ main {
   letter-spacing: 0;
 }
 
+/* Push pins poked through the top of a polaroid. */
+.pin {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  top: -10px;
+  left: 50%;
+  margin-left: -11px;
+  filter: drop-shadow(2px 3px 3px rgba(0, 0, 0, 0.28));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.polaroid-1 .pin { left: 52%; }
+.polaroid-3 .pin { left: 62%; }
+.polaroid-5 .pin { left: 38%; }
+
+/* Paper clips wrapping the top edge — slightly tilted so each one
+   sits at its own jaunty angle. */
+.clip {
+  position: absolute;
+  width: 22px;
+  height: 52px;
+  top: -28px;
+  filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
+  z-index: 2;
+  pointer-events: none;
+}
+
+.polaroid-2 .clip { left: 18%; rotate: -8deg; }
+.polaroid-4 .clip { left: 68%; rotate: 12deg; }
+.polaroid-6 .clip { left: 22%; rotate: -10deg; }
+
 @media (max-width: 1024px) {
   .polaroid-board {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 56px 40px;
-    margin: 80px auto 80px;
+    margin: 80px auto;
   }
 }
 
+/* Mobile: ditch the absolute scatter for a simple grid; pins/clips
+   stay on each polaroid and ride along. */
 @media (max-width: 640px) {
   .polaroid-board {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px 20px;
-    margin: 64px auto 64px;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px 20px;
+    margin: 64px auto;
+    padding: 24px 0;
   }
 
   .polaroid {
+    position: static;
+    width: 100%;
     padding: 10px 10px 12px;
+    top: auto;
+    left: auto;
   }
+
+  .polaroid-1, .polaroid-3, .polaroid-5 { rotate: -3deg; }
+  .polaroid-2, .polaroid-4, .polaroid-6 { rotate: 3deg; }
 
   .polaroid-caption {
     font-size: 20px;
@@ -916,6 +958,10 @@ main {
     gap: 64px 48px;
     padding: 200px 48px 120px;
   }
+
+  .project-name {
+    font-size: 36px;
+  }
 }
 
 /* ≥ 2400px: 3 columns with ample side padding */
@@ -924,5 +970,9 @@ main {
     grid-template-columns: repeat(3, 1fr);
     gap: 72px 56px;
     padding: 220px 160px 140px;
+  }
+
+  .project-name {
+    font-size: 38px;
   }
 }
