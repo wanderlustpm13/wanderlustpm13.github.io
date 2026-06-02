@@ -618,8 +618,10 @@ document.addEventListener('DOMContentLoaded', () => {
     videoObserver.observe(video);
   });
 
-  // Logo text click → scroll to top
-  const logoTextLink = document.querySelector('.logo-text');
+  // Home-page logo: smooth-scroll to top when clicking the text link
+  // (which only exists as an <a> on the home page; on About it's a <span>
+  // wrapped by a regular <a class="logo-wrap"> that navigates home).
+  const logoTextLink = document.querySelector('a.logo-text');
   if (logoTextLink) {
     logoTextLink.addEventListener('click', (e) => {
       e.preventDefault();
@@ -627,56 +629,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // About Me link → smooth-scroll to outro.
-  // Project images lazy-load (initFadingImage clears img.src until in view),
-  // so before they load each project container has ~0 height. A native
-  // smooth scroll computes the outro's target position once and locks in,
-  // landing in the wrong spot once images load and push layout down.
-  // Fix: (1) preempt all project loads so the page expands now, and
-  // (2) use a custom rAF scroll that re-targets each frame.
-  const aboutLink = document.querySelector('.nav-about');
-  const outroEl = document.querySelector('#outro');
-  if (aboutLink && outroEl) {
-    aboutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      document.querySelectorAll('.project').forEach((project) => {
-        if (project._mediaTrigger) {
-          project._mediaTrigger();
-          delete project._mediaTrigger;
-        }
-        project.style.opacity = '1';
-        project.style.transform = 'translateY(0)';
-      });
-
-      const startY = window.scrollY;
-      const startTime = performance.now();
-      const duration = 900;
-
-      function tick(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = progress < 0.5
-          ? 2 * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
-        const target = outroEl.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo(0, startY + (target - startY) * eased);
-
-        if (progress < 1) requestAnimationFrame(tick);
-      }
-
-      requestAnimationFrame(tick);
-    });
-  }
-
-  // Logo swap: image on intro & outro, text on projects
+  // Logo swap: image on intro & outro, text on projects.
+  // On the About page there is no .intro/.projects, so we just keep the
+  // image-logo state (the text logo would have nothing to swap to).
   const header = document.querySelector('.header');
   const introEl = document.querySelector('.intro');
-  const projectsSection = document.querySelector('.projects');
   const outroSection = document.querySelector('.outro');
 
   function updateLogo() {
+    if (!header) return;
+    if (!introEl) {
+      header.classList.remove('header--scrolled');
+      return;
+    }
     const scrollY = window.scrollY;
     const vh = window.innerHeight;
     const pastIntro = scrollY >= introEl.offsetHeight - 10;

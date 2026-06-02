@@ -214,7 +214,7 @@ main {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  padding: 88px var(--content-padding) 0;
+  padding: 160px var(--content-padding) 0;
 }
 
 .outro .hero {
@@ -281,7 +281,7 @@ main {
 .polaroid-board {
   position: relative;
   width: 100%;
-  max-width: var(--content-max);
+  max-width: 1600px;
   margin: 96px auto;
   height: clamp(720px, 70vw, 940px);
 }
@@ -290,7 +290,7 @@ main {
   position: absolute;
   background: #fffefa;
   padding: 14px 14px 16px;
-  width: clamp(200px, 22vw, 280px);
+  width: clamp(220px, 20vw, 320px);
   box-shadow:
     0 4px 14px rgba(0, 0, 0, 0.12),
     0 1px 3px rgba(0, 0, 0, 0.08);
@@ -437,6 +437,9 @@ main {
   position: relative;
   width: 40px;
   height: 40px;
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 .logo-img {
@@ -910,69 +913,5 @@ main {
 
   .project-name {
     font-size: 28px;
-  }
-}
-
-/* ============================================================ */
-/* ALTERNATE: Multi-Column Projects Layout (currently active)   */
-/* ============================================================ */
-/* To revert to the original single-column layout, delete this  */
-/* entire section.                                              */
-/* ============================================================ */
-
-/* Base = 1 column (mobile) */
-.projects {
-  display: grid;
-  grid-template-columns: 1fr;
-  max-width: none;
-  margin: 0;
-  gap: 56px;
-  padding: 160px 24px 100px;
-}
-
-.project-info {
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 20px;
-  width: 92%;
-}
-
-.project-name {
-  font-size: 32px;
-  line-height: 1.25;
-}
-
-.project-description {
-  font-size: 16px;
-  padding-top: 0;
-}
-
-.project-time {
-  font-size: 15px;
-}
-
-/* ≥ 1080px: 2 columns */
-@media (min-width: 1080px) {
-  .projects {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 64px 48px;
-    padding: 200px 48px 120px;
-  }
-
-  .project-name {
-    font-size: 36px;
-  }
-}
-
-/* ≥ 2400px: 3 columns with ample side padding */
-@media (min-width: 2400px) {
-  .projects {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 72px 56px;
-    padding: 220px 160px 140px;
-  }
-
-  .project-name {
-    font-size: 38px;
   }
 }

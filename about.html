@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Min Peng — About</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="images/logo.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="scripts.js" defer></script>
+</head>
+<body>
+  <canvas class="halftone-canvas" aria-hidden="true"></canvas>
+  <div class="dot-glow" aria-hidden="true"></div>
+
+  <header class="header">
+    <a href="index.html" class="logo-wrap" aria-label="Min Peng — Home">
+      <img src="images/logo.png" alt="" class="logo-img">
+      <span class="logo-text">Min Peng</span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">Works</a>
+      <a href="https://www.linkedin.com/in/m1np3ng/" target="_blank" class="nav-link">LinkedIn</a>
+      <a href="resume-mar2026.pdf" target="_blank" class="nav-link">Resume</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="outro" class="outro">
+      <div class="hero">
+        <p class="outro-body">
+          I love real people problems, delightful little details <span class="glyph-flower">✿</span>, and playful UI that makes you go <span class="emoticon">( ,,<span class="eye">◕</span>&nbsp;&nbsp;&#818;&nbsp;<span class="eye">◕</span>,, )</span>. I believe everything can be made better with good design and a dash of humor.
+        </p>
+        <p class="outro-body">
+          Outside of work, you can usually find me taking photos with my film camera, planning my next trip, organizing tiny corners of my home, or falling into a social media rabbit hole for a little too long.
+        </p>
+      </div>
+
+      <div class="polaroid-board" aria-label="Photo board">
+        <div class="polaroid polaroid-1">
+          <svg class="pin pin-red" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="8" fill="#c84a3a"/>
+            <circle cx="9" cy="9" r="2.5" fill="rgba(255,255,255,0.45)"/>
+          </svg>
+          <img src="images/film-1.JPG" alt="Tokyo street" loading="lazy">
+          <p class="polaroid-caption">my little living room</p>
+        </div>
+        <div class="polaroid polaroid-2">
+          <svg class="clip" viewBox="0 0 24 56" aria-hidden="true">
+            <path d="M 8 46 L 8 12 Q 8 6 13 6 Q 18 6 18 12 L 18 46 Q 18 52 11 52 Q 4 52 4 46 L 4 16" fill="none" stroke="#9da1a7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <img src="images/film-2.JPG" alt="Cat napping" loading="lazy">
+          <p class="polaroid-caption">mirror selfie ofc</p>
+        </div>
+        <div class="polaroid polaroid-3">
+          <svg class="pin pin-mustard" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="8" fill="#d4a132"/>
+            <circle cx="9" cy="9" r="2.5" fill="rgba(255,255,255,0.5)"/>
+          </svg>
+          <img src="images/film-3.jpg" alt="Lisbon tram" loading="lazy">
+          <p class="polaroid-caption">Istanbul, 2025</p>
+        </div>
+        <div class="polaroid polaroid-4">
+          <svg class="clip" viewBox="0 0 24 56" aria-hidden="true">
+            <path d="M 8 46 L 8 12 Q 8 6 13 6 Q 18 6 18 12 L 18 46 Q 18 52 11 52 Q 4 52 4 46 L 4 16" fill="none" stroke="#9da1a7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <img src="images/film-4.jpg" alt="Cozy morning corner" loading="lazy">
+          <p class="polaroid-caption">Jaipur, India, 2019</p>
+        </div>
+        <div class="polaroid polaroid-5">
+          <svg class="pin pin-blue" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="8" fill="#4a6fa5"/>
+            <circle cx="9" cy="9" r="2.5" fill="rgba(255,255,255,0.45)"/>
+          </svg>
+          <img src="images/film-5.jpg" alt="Other cat" loading="lazy">
+          <p class="polaroid-caption">Iceland, 2023</p>
+        </div>
+        <div class="polaroid polaroid-6">
+          <svg class="clip" viewBox="0 0 24 56" aria-hidden="true">
+            <path d="M 8 46 L 8 12 Q 8 6 13 6 Q 18 6 18 12 L 18 46 Q 18 52 11 52 Q 4 52 4 46 L 4 16" fill="none" stroke="#9da1a7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <img src="images/film-6.jpg" alt="Snow in Hakuba" loading="lazy">
+          <p class="polaroid-caption">Paris, 2024</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="footer-left">© 2026 Min Peng</span>
+    <span class="footer-right">Made in Cursor with <span class="glyph-heart">♥</span></span>
+  </footer>
+</body>
+</html>
